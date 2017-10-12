@@ -7,8 +7,8 @@ The consumer flow is designed to fetch the customer details on the basis of cust
 ----------------------------------------------------------------------------------------------------------------------------------
 Interaction of use case 2 with the API: 
 ----------------------------------------------
-
-The given Customer APIs are proxied, exchanged and published using the API manager on API portal and made public. Limiting policy can be applied on get and update /customer api to limit the number of requests per minute. In this way the api can used efficiently over the network. 
+The Http protocol support and usage of application/json allows the various Customer APIs to be integrated with Mobile aplication easily.
+The given Customer APIs are proxied, and can be exchanged and published using the API manager on API portal on cloudHub and made public. On cloudhub deployment, limiting policy can be applied on get and update /customer api to limit the number of requests per minute/second. In this way the APIs can used efficiently over the network. 
 
 ----------------------------------------------------------------------------------------------------------------------------------
 API could be extended for use case 3: 
