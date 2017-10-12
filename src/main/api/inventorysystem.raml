@@ -1,0 +1,120 @@
+#%RAML 1.0
+title: InventorySystem
+description: the application contains api interfaces for Customer, Product and Orders.
+version: 1.0
+baseUri: https://mocksvc.mulesoft.com/mocks/fb6223c3-5154-4ebd-8bd8-876016db408d/api/{version} # baseUri: http://inventory-system/api/{version}
+mediaType: application/json
+documentation: 
+- title: Introduction
+  content: |
+      APIs to manage the Customer, Products and Orders in an inventory system.
+resourceTypes: 
+types: 
+  Customer:
+    properties: 
+      id: integer
+      firstName: string
+      lastName: string
+      creationDateAndTime:  datetime-only
+      modifiedDateAndTime:  datetime-only
+      addressLine1: string
+      city: string
+ 
+/product: 
+  description: extension for product API
+/order: 
+  description: extension for order API
+/customer:
+  description: Perform CRUD operations on customer instance.
+  post:
+    responses:      
+      201:
+    body: 
+      type: Customer
+      description: To save the customer detail
+      example: 
+        {
+          "id" :  1, 
+          "firstName" : "ZX4102",
+          "lastName" : "A1",
+          "creationDateAndTime" : "2013-10-22T16:17:00",
+          "modifiedDateAndTime" : "2013-10-22T16:17:00",
+          "addressLine1" : "High Street, Paramata",
+          "city" : "Sydney"
+        }
+      
+  get:
+    description: To get detail of specific client
+    queryParameters:
+      id: integer
+    responses: 
+      200:
+        body: 
+          type: Customer
+          example:  |
+            {
+            "id" :  1, 
+            "firstName" : "ZX4102",
+            "lastName" : "A1",
+            "creationDateAndTime" : "2013-10-22T16:17:00",
+            "modifiedDateAndTime" : "2013-10-22T16:17:00",
+            "addressLine1" : "High Street, Paramata",
+            "city" : "Sydney"
+            }
+    
+  put:
+    description: To edit existing customer details
+    body:
+      type: Customer
+      example:  |
+        {
+            "id" :  1, 
+            "firstName" : "ZX4102",
+            "lastName" : "A1",
+            "creationDateAndTime" : "2013-10-22T16:17:00",
+            "modifiedDateAndTime" : "2013-10-22T16:17:00",
+            "addressLine1" : "High Street, Paramata",
+            "city" : "Sydney"
+            }
+    responses: 
+      204:
+
+  delete:
+    description: to delete a customer detail
+    queryParameters: 
+      id: integer
+    responses: 
+      204:
+/customers:
+  description: Get customers detail
+  get:
+    responses:
+      200:
+        body: 
+          type: Customer[]
+          example:  |
+                [ 
+                  {
+                    "id"  : 1,
+                    "firstName" : "Sumit",
+                    "lastName" : "Gole",
+                    "creationDateAndTime" : "2013-10-22T16:17:00",
+                    "modifiedDateAndTime" : "2013-10-22T16:17:00",
+                    "addressLine1" : "High Street, Paramata",
+                    "city" : "Sydney"
+                    
+                  },
+                  {
+                    "id"  : 2,
+                    "firstName" : "Suryansh",
+                    "lastName" : "Gole",
+                    "creationDateAndTime" : "2013-10-22T16:17:00",
+                    "modifiedDateAndTime" : "2013-10-22T16:17:00",
+                    "addressLine1" : "High Street, Paramata",
+                    "city" : "Sydney"
+                   
+                  }
+                ]
+                             
+     
+            

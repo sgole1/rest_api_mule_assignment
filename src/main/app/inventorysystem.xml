@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+    <http:listener-config name="inventorysystem-httpListenerConfig" host="0.0.0.0" port="8081" doc:name="HTTP Listener Configuration"/>
+    <apikit:config name="inventorysystem-config" raml="inventorysystem.raml" consoleEnabled="false" doc:name="Router"/>
+    <flow name="inventorysystem-main">
+        <http:listener config-ref="inventorysystem-httpListenerConfig" path="/api/*" doc:name="HTTP"/>
+        <apikit:router config-ref="inventorysystem-config" doc:name="APIkit Router"/>
+        <exception-strategy ref="inventorysystem-apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy"/>
+    </flow>
+    <flow name="inventorysystem-console">
+        <http:listener config-ref="inventorysystem-httpListenerConfig" path="/console/*" doc:name="HTTP"/>
+        <apikit:console config-ref="inventorysystem-config" doc:name="APIkit Console"/>
+    </flow>
+    <flow name="put:/customer:application/json:inventorysystem-config">
+        <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="delete:/customer:inventorysystem-config">
+        <set-payload value="#[NullPayload.getInstance()]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/customer:inventorysystem-config">
+        <set-payload value="{&#xA;&quot;id&quot; :  1, &#xA;&quot;firstName&quot; : &quot;ZX4102&quot;,&#xA;&quot;lastName&quot; : &quot;A1&quot;,&#xA;&quot;creationDateAndTime&quot; : &quot;2013-10-22T16:17:00&quot;,&#xA;&quot;modifiedDateAndTime&quot; : &quot;2013-10-22T16:17:00&quot;,&#xA;&quot;addressLine1&quot; : &quot;High Street, Paramata&quot;,&#xA;&quot;city&quot; : &quot;Sydney&quot;&#xA;}" doc:name="Set Payload"/>
+    </flow>
+    <flow name="get:/customers:inventorysystem-config">
+        <set-payload value="[ &#xA;  {&#xA;    &quot;id&quot;  : 1,&#xA;    &quot;firstName&quot; : &quot;Sumit&quot;,&#xA;    &quot;lastName&quot; : &quot;Gole&quot;,&#xA;    &quot;creationDateAndTime&quot; : &quot;2013-10-22T16:17:00&quot;,&#xA;    &quot;modifiedDateAndTime&quot; : &quot;2013-10-22T16:17:00&quot;,&#xA;    &quot;addressLine1&quot; : &quot;High Street, Paramata&quot;,&#xA;    &quot;city&quot; : &quot;Sydney&quot;&#xA;    &#xA;  },&#xA;  {&#xA;    &quot;id&quot;  : 2,&#xA;    &quot;firstName&quot; : &quot;Suryansh&quot;,&#xA;    &quot;lastName&quot; : &quot;Gole&quot;,&#xA;    &quot;creationDateAndTime&quot; : &quot;2013-10-22T16:17:00&quot;,&#xA;    &quot;modifiedDateAndTime&quot; : &quot;2013-10-22T16:17:00&quot;,&#xA;    &quot;addressLine1&quot; : &quot;High Street, Paramata&quot;,&#xA;    &quot;city&quot; : &quot;Sydney&quot;&#xA;   &#xA;  }&#xA;]" doc:name="Set Payload"/>
+    </flow>
+    <flow name="post:/customer:application/json:inventorysystem-config">
+        <set-payload value="#[payload]" doc:name="Set Payload"/>
+        <logger message="POST request to save data : #[payload]" level="INFO" doc:name="Logger"/>
+    </flow>
+    <apikit:mapping-exception-strategy name="inventorysystem-apiKitGlobalExceptionMapping">
+        <apikit:mapping statusCode="404">
+            <apikit:exception value="org.mule.module.apikit.exception.NotFoundException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Resource not found&quot; }" doc:name="Set Payload"/>
+            <logger level="INFO" doc:name="Logger" message="Exception #[payload]"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="405">
+            <apikit:exception value="org.mule.module.apikit.exception.MethodNotAllowedException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Method not allowed&quot; }" doc:name="Set Payload"/>
+            <logger level="INFO" doc:name="Logger" message="Exception #[payload]"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="415">
+            <apikit:exception value="org.mule.module.apikit.exception.UnsupportedMediaTypeException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Unsupported media type&quot; }" doc:name="Set Payload"/>
+            <logger level="INFO" doc:name="Logger" message="Exception #[payload]"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="406">
+            <apikit:exception value="org.mule.module.apikit.exception.NotAcceptableException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Not acceptable&quot; }" doc:name="Set Payload"/>
+            <logger level="INFO" doc:name="Logger" message="Exception #[payload]"/>
+        </apikit:mapping>
+        <apikit:mapping statusCode="400">
+            <apikit:exception value="org.mule.module.apikit.exception.BadRequestException" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Bad request&quot; }" doc:name="Set Payload"/>
+            <logger level="INFO" doc:name="Logger" message="Exception #[payload]"/>
+        </apikit:mapping>
+         <apikit:mapping statusCode="500">
+            <apikit:exception value="java.lang.Exception" />
+            <set-property propertyName="Content-Type" value="application/json" doc:name="Property"/>
+            <set-payload value="{ &quot;message&quot;: &quot;Internal server error&quot; }" doc:name="Set Payload"/>
+            <logger level="INFO" doc:name="Logger" message="Internal server Exception #[payload]"/>
+        </apikit:mapping>
+    </apikit:mapping-exception-strategy>
+</mule>

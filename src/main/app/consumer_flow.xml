@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:apikit="http://www.mulesoft.org/schema/mule/apikit" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/apikit http://www.mulesoft.org/schema/mule/apikit/current/mule-apikit.xsd">
+    <http:request-config name="HTTP_Request_Configuration" protocol="HTTPS" host="mocksvc.mulesoft.com" port="443" basePath="/mocks/fb6223c3-5154-4ebd-8bd8-876016db408d/api/1.0" doc:name="HTTP Request Configuration">
+        <http:raml-api-configuration location="inventorysystem.raml"/>
+    </http:request-config>
+    <flow name="consumer_usecase_1_Flow">
+        <poll doc:name="Poll">
+            <fixed-frequency-scheduler frequency="5" timeUnit="SECONDS"/>
+            <http:request config-ref="HTTP_Request_Configuration" path="/customer" method="GET" doc:name="HTTP">
+                <http:request-builder>
+                    <http:query-param paramName="id" value="1"/>
+                </http:request-builder>
+            </http:request>
+        </poll>
+        <logger message="#[payload]" level="INFO" doc:name="Logger"/>
+        <http:request config-ref="HTTP_Request_Configuration" path="/customer" method="POST" doc:name="HTTP"/>
+        <logger message="After post request : #[message]" level="INFO" doc:name="Logger"/>
+        <exception-strategy ref="inventorysystem-apiKitGlobalExceptionMapping" doc:name="Reference Exception Strategy"/>
+    </flow>
+</mule>
