@@ -1,4 +1,10 @@
-# rest_api_mule_assignment
+# rest_api_mule_assignmen
+The code repository contains Customer APIs to perform CRUDs operations. The APIs are designed using the inventorysystem.raml. The .raml is used to create the Mule flows to define APIs flow. A consumer_flow is created for usecase 1 polling once in 5 minutes. Customer get API is used to GET the customer data on the basis of its id and a custome POST api is used to save the data.
+
+Assumptions:
+1. Security is not implemented.
+2. Assignement is focusing on the APIs standard designs.
+
 -------------------------------------------------------------------
 Interaction of use case 1 with the API: 
 -------------------------------------------------------------------
